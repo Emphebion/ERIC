@@ -91,7 +91,7 @@ class Event:
 
     def __start_hack(self):
         self.is_hacking = True
-        self.__start_timer(30)
+        self.__start_timer(300)
         self.__previous_data = [50, 20, 80]
         self.active_sensor.do_action("hack", self.__previous_data)
         print('Event {} - At {:.1f}: Player {} started hacking'.format(self.eventID, time.time()-self.timer_start, self.current_player.name))

@@ -46,23 +46,35 @@ ardaddr = 0x0d
 events = event2
 
 [poort]
-ardaddr = 0x0e
-events = event2
+ardaddr = 0x15
+events = event3
+
+[item1]
+ardaddr = 0x16
+events = event4
 
 [events]
-devices = event1, event2
+devices = event1, event2, event3, event4
 
 [event1]
 event_id = 0xf0
-actors = deur1, steen1_act
-wildcard1 =sluit,5,open
+actors = deur1
+wildcard1 =sluit,900,open
 onklaarmaken = hack(steen1_act,wildcard1)
 
 [event2]
-event_id = 0xf1
-actors = deur2, steen2_act
-wildcard2 =sluit,5,open
+event_id = 0xf0
+actors = deur2
+wildcard2 =sluit,900,open
 onklaarmaken = hack(steen2_act,wildcard2)
+
+[event3]
+event_id = 0x0a
+actors = deur1
+
+[event4]
+event_id = 0x0f
+actors = deur1
 
 
 [spelers]
