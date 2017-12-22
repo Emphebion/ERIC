@@ -35,7 +35,7 @@ class ArdUniverse:
                 hardware = TestSensor(sensor_name)
             else:
                 hardware = ArduinoInterface(serial_pool, port, int(config.get(sensor_name, 'ardaddr'), 0))
-            sensor = Sensor(sensor_name, hardware, map(str.strip, config.get(sensor_name, 'events').split(',')))
+            sensor = Sensor(sensor_name, hardware, map(str.strip, config.get(sensor_name, 'events').split(',')), config.getint(sensor_name, 'channels'))
             self.sensors.append(sensor)
             devices_dict[sensor_name] = sensor
 
@@ -46,6 +46,7 @@ class ArdUniverse:
             for item in config.items(event_name):
                 if item[0] not in ['event_id', 'actors']:
                     actions[item[0]] = item[1]
+            print actions
             event = Event(config.get(event_name, 'event_id'), actions, actors)
             self.events.append(event)
             devices_dict[event_name] = event
@@ -77,35 +78,38 @@ def main():
     while True:
         for sensor in ardUniverse.sensors:
             status = sensor.get_status()
-            player = players.find_player_for_rfid(status)
-            for event in sensor.events:
-                handle_event(event, player, sensor)
+            if status:
+                print "Status received: ",status
+            player_list = players.find_player_for_rfid(status)
+            for player in player_list:
+                for event in sensor.events:
+                    start_new_event(event, player, sensor)
+                
+        for event in ardUniverse.events:
+            handle_event(event)
+            
 
-
-def handle_event(event, player, sensor):
+def start_new_event(event, player, sensor):
     is_active = event.eventID in active_events
-    running = False
-    if event.eventID == "0xf1" and sensor.title == "steen2": print("{}@{} triggered {}active event {}".format(player, sensor, "" if is_active else "in", event))
-    if is_active:
-        if event.active_sensor == sensor and player != event.current_player and event.is_hacking:
-            print(event.active_sensor)
-            print(event.current_player)
-            print(player)
-            print("Stopping the Hack")
-            event.stop_hack()
-
-        running = event.tick()
-        if not running:
-            active_events.remove(event.eventID)
+    if not is_active:
+        if not player.skills.isdisjoint(event.actions):
+            event.start(player,sensor)
+            active_events.add(event.eventID)
+            event.active = True
     else:
-        if player:
-            if not player.skills.isdisjoint(event.actions):
-                event.start(player, sensor)
-                active_events.add(event.eventID)
-            else:
-                sensor.data = [100,0,0]
-                sensor.do_action('sluit')
+        if event.active_sensor == sensor and player != event.current_player and event.is_hacking:
+            event.stop_hack()
+        
+def handle_event(event):
+    #if event.eventID == "0xf0": print("{}@{} triggered {}active event {}".format(player, sensor, "" if is_active else "in", event))
+    is_active = event.eventID in active_events
+    status = False
+    if is_active and event.active:
+        status = event.tick()
+        if not status:
+            active_events.remove(event.eventID)
+            event.active = False
 
-
+            
 if __name__ == '__main__':
     main()

@@ -65,6 +65,9 @@ class ArduinoInterface(HardwareInterface):
         self.__send_command(command, data)
         result = self.__wait_for_confirm()
         return result
+    
+    def get_address(self):
+        return self.__address
 
     def __send_command(self, command, data):
         crc = (self.__address ^ ord(command) ^ data[0] ^ data[1] ^ data[2])

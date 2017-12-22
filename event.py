@@ -5,6 +5,7 @@ class Event:
         self.eventID = eventID
         self.actions = actions
         self.actors = actors
+        self.active = False
         self.active_sensor = None
         self.current_sequence = []
         self.current_player = None
@@ -22,14 +23,16 @@ class Event:
         self.current_player = player
         self.active_sensor = sensor
         self.current_sequence = self.__find_action_for_player(player)
+        print self.current_sequence
 
     def tick(self):
         if self.is_hacking:
             return self.__hack_tick()
         elif self.__timer_is_done():
+            print(self.current_sequence)
             if self.current_sequence:
-                print(self.current_sequence)
                 next_action = self.current_sequence.pop()
+                print "next = ",next_action
                 try:
                     delay = int(next_action)
                     self.__start_timer(delay)
@@ -51,6 +54,8 @@ class Event:
         if action_list:
             for action in action_list:
                 if 'open' in self.actions[action].split(","):
+                    return self.actions[action].split(",")
+                if 'sluit' in self.actions[action].split(","):
                     return self.actions[action].split(",")
             return [None, self.actions[action]]
         return None
