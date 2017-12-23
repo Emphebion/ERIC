@@ -1,4 +1,6 @@
-import time
+import time, logging
+
+log = logging.getLogger('ERIC.event')
 
 class Event:
     def __init__(self, eventID, actions, actors):
@@ -29,10 +31,9 @@ class Event:
         if self.is_hacking:
             return self.__hack_tick()
         elif self.__timer_is_done():
-            print(self.current_sequence)
             if self.current_sequence:
+                print self.current_sequence
                 next_action = self.current_sequence.pop()
-                print "next = ",next_action
                 try:
                     delay = int(next_action)
                     self.__start_timer(delay)
@@ -47,7 +48,8 @@ class Event:
         self.is_hacking = False
         self.current_player = None
         self.__stop_timer()
-        self.current_sequence = []
+        self.current_sequence = ['other']
+        self.active_sensor.data = [0,0,100]
 
     def __find_action_for_player(self, player):
         action_list = list(set(player.skills).intersection(self.actions))
@@ -56,6 +58,10 @@ class Event:
                 if 'open' in self.actions[action].split(","):
                     return self.actions[action].split(",")
                 if 'sluit' in self.actions[action].split(","):
+                    return self.actions[action].split(",")
+                if 'blauw' in self.actions[action].split(","):
+                    return self.actions[action].split(",")
+                if 'rood' in self.actions[action].split(","):
                     return self.actions[action].split(",")
             return [None, self.actions[action]]
         return None
@@ -99,7 +105,8 @@ class Event:
         self.__start_timer(300)
         self.__previous_data = [50, 20, 80]
         self.active_sensor.do_action("hack", self.__previous_data)
-        print('Event {} - At {:.1f}: Player {} started hacking'.format(self.eventID, time.time()-self.timer_start, self.current_player.name))
+        log.info('Player %s stated hacking on sensor %s at time %s' % (self.current_player.name,self.active_sensor.title,time.localtime()))
+        
 
     def __hack_tick(self):
         delta = time.time() - self.timer_start

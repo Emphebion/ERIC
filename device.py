@@ -4,7 +4,8 @@ commands = {
     'status': b'\x0b',
     'open': b'\x0c',
     'sluit': b'\x0d',
-    'hack': b'\x0e'
+    'hack': b'\x0e',
+    'anders': b'\x0f'
 }
 
 class Actuator:
@@ -51,7 +52,6 @@ class Sensor:
     def get_status(self):
         command = commands['status']
         newstatuscode = self.__hardware.send(command, [0, 0, 0])
-        
         if self.statuscode and newstatuscode != self.statuscode:
             self.notfoundcounter += 1
             print self.notfoundcounter

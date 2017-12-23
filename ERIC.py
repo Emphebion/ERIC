@@ -1,5 +1,6 @@
-#from kivy.logger import Logger
-#log = Logger
+import logging
+logging.basicConfig(level=logging.DEBUG)
+log = logging.getLogger('ERIC')
 import ConfigParser
 config = ConfigParser.ConfigParser()
 
@@ -9,6 +10,8 @@ from hardware import HardwareInterface, OscarInterface, ArduinoInterface, TestAc
 from player import Players
 from serial_pool import SerialPool
 
+log.info('Booting')
+
 class ArdUniverse:
     def __init__(self, config_file):
         self.actors = []
@@ -17,6 +20,7 @@ class ArdUniverse:
         self.parseConfig(config_file)
 
     def parseConfig(self, config_file):
+        log.info('Loading config')
         config.read(config_file)
 
         port = config.get('common', 'ard_port', 'COM20')
@@ -46,7 +50,6 @@ class ArdUniverse:
             for item in config.items(event_name):
                 if item[0] not in ['event_id', 'actors']:
                     actions[item[0]] = item[1]
-            print actions
             event = Event(config.get(event_name, 'event_id'), actions, actors)
             self.events.append(event)
             devices_dict[event_name] = event
@@ -61,6 +64,7 @@ class ArdUniverse:
         # Connect hardware to actors
         for actor in self.actors:
             actor.set_hardware(config, devices_dict)
+            
 
     def connect_all(self):
         for device in self.sensors + self.actors:
@@ -78,8 +82,8 @@ def main():
     while True:
         for sensor in ardUniverse.sensors:
             status = sensor.get_status()
-            if status:
-                print "Status received: ",status
+            # if status:
+                # print "Status received: ",status
             player_list = players.find_player_for_rfid(status)
             for player in player_list:
                 for event in sensor.events:
@@ -92,13 +96,21 @@ def main():
 def start_new_event(event, player, sensor):
     is_active = event.eventID in active_events
     if not is_active:
-        if not player.skills.isdisjoint(event.actions):
-            event.start(player,sensor)
-            active_events.add(event.eventID)
-            event.active = True
+        if player:
+            if not player.skills.isdisjoint(event.actions):
+                log.info('Player %s started event %s on sensor %s' % (player.name,event.eventID,sensor.title))
+                event.start(player,sensor)
+                active_events.add(event.eventID)
+                event.active = True
     else:
+        # Double check is we really check if same tag is displayed both here and at the stones
         if event.active_sensor == sensor and player != event.current_player and event.is_hacking:
+            log.info('Hacking by Player %s was unsuccessful' % (event.current_player.name))
             event.stop_hack()
+        elif event.active_sensor != sensor and player:
+            sensor.do_action('anders',[50,50,0])
+            sensor.do_action('anders',[0,0,100])
+            
         
 def handle_event(event):
     #if event.eventID == "0xf0": print("{}@{} triggered {}active event {}".format(player, sensor, "" if is_active else "in", event))
