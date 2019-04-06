@@ -4,7 +4,8 @@ commands = {
     'status': b'\x0b',
     'open': b'\x0c',
     'sluit': b'\x0d',
-    'hack': b'\x0e'
+    'hack': b'\x0e',
+    'anders': b'\x0f'
 }
 
 class Actuator:
@@ -37,12 +38,13 @@ class Actuator:
             self.__hardware.send(action, data)
 
 class Sensor:
-    def __init__(self, title, hardware, events):
+    def __init__(self, title, hardware, events, channels):
         self.title = title
         self.__hardware = hardware
         self.events = events
         self.statuscode = None
         self.notfoundcounter = 0
+        self.channels = channels
 
     def __str__(self):
         return 'Sensor {}'.format(self.title)
@@ -50,21 +52,27 @@ class Sensor:
     def get_status(self):
         command = commands['status']
         newstatuscode = self.__hardware.send(command, [0, 0, 0])
-        print "status = ",self.statuscode
-        print "new status = ",newstatuscode
-        
         if self.statuscode and newstatuscode != self.statuscode:
             self.notfoundcounter += 1
             print self.notfoundcounter
             if self.notfoundcounter > 5:
                 self.statuscode = newstatuscode
-                return newstatuscode
-            return self.statuscode
+            return self.__parse_status()
             
         self.statuscode = newstatuscode
         self.notfoundcounter = 0
-        return self.statuscode
-
+        return self.__parse_status()
+    
+    def __parse_status(self):
+        if self.channels == 1:
+            return [self.statuscode]
+        status_list = []
+        if self.statuscode:
+            for x in range(0,self.channels):
+                if(self.statuscode & (1 << ((32/self.channels)*x))):
+                    status_list.append(self.get_hardware().get_address()*(x+1)*100)
+        return status_list
+            
     def get_hardware(self):
         return self.__hardware
 

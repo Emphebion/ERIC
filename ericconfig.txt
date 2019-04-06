@@ -1,75 +1,237 @@
 [common]
-port = COM3
-spelers = janneke,jip
-rooms = floor, sfx, spot
+spelers = janneke,jip,gerard,device1,device2,device3,device4,device5,device6,device7,device8,gate,remote2,remote3,remote9,remote10,remote11,remote12
 ard_rooms = actors, sensors, events
 ard_port = COM22
 
 
 [actors]
-devices = deur1, deur2, deur3, deur4, steen1_act, steen2_act, steen3_act, steen4_act
+devices = lichtsnoer1, lichtsnoer2, lichtsnoer3, lichtsnoer4, deur1, deur2, deur3, deur4, poort, kamer1licht, kamer2licht, kamer3licht, kamer4licht, kamer5licht, kamer6licht, ketels
+
+[lichtsnoer1]
+open = deuren.deur1.opengroen
+sluit = deuren.deur1.dichtrood
+
+[lichtsnoer2]
+open = deuren.deur2.opengroen
+sluit = deuren.deur2.dichtrood
+
+[lichtsnoer3]
+open = deuren.deur3.opengroen
+sluit = deuren.deur3.dichtrood
+
+[lichtsnoer4]
+open = deuren.deur4.opengroen
+sluit = deuren.deur4.dichtrood
+
+[kamer1licht]
+open = ruimte1.wit
+sluit = ruimte1.blackout
+
+[kamer2licht]
+open = ruimte2.wit
+sluit = ruimte2.blackout
+
+[kamer3licht]
+open = ruimte3.wit
+sluit = ruimte3.blackout
+
+[kamer4licht]
+open = ruimte4.wit
+sluit = ruimte4.blackout
+
+[kamer5licht]
+open = ruimte5.wit
+sluit = ruimte5.blackout
+
+[kamer6licht]
+open = ruimte6.wit
+sluit = ruimte6.blackout
 
 [deur1]
-open = sfx.lightning1
-sluit = deur1.close
+open = deuren.deur5.open
+sluit = deuren.deur5.dicht
 
 [deur2]
-open = sfx.lightning2
-sluit = deur2.close
+open = deuren.deur6.open
+sluit = deuren.deur6.dicht
 
 [deur3]
-open = deur3.open
-sluit = deur3.close
+open = ketels.spotkist1.wit
+sluit = ketels.spotkist1.blackout
 
 [deur4]
-open = deur4.open
-sluit = deur4.close
+open = ketels.spotkist2.wit
+sluit = ketels.spotkist2.blackout
+
+[poort]
+open = something
+
+[ketels]
+open = ketels.fireblue
+sluit = ketels.firered
 
 
 [sensors]
-devices = steen1, steen2, steen3, steen4, poort
+devices = steen1, steen2, steen3, steen4, remote, items1, items2
 
 [steen1]
-ardaddr = 0x0b
-events = event1
+ardaddr = 0x0a
+events = lichtdeur1
+channels = 1
 
 [steen2]
-ardaddr = 0x0f
-events = event2
+ardaddr = 0x0c
+events = lichtdeur2
+channels = 1
 
 [steen3]
-ardaddr = 0x0c
-events = event2
+ardaddr = 0x0e
+events = lichtdeur3
+channels = 1
 
 [steen4]
-ardaddr = 0x0d
-events = event2
+ardaddr = 0x0f
+events = lichtdeur4
+channels = 1
 
-[poort]
-ardaddr = 0x0e
-events = event2
+[remote]
+ardaddr = 0x15
+events = ketelsevent, poortevent1, override1, override2, override3, override4
+channels = 16
+
+[items1]
+ardaddr = 0x20
+events = achterdeur1, achterdeur2
+channels = 4
+
+[items2]
+ardaddr = 0x21
+events = achterdeur3, achterdeur4
+channels = 4
+
 
 [events]
-devices = event1, event2
+devices = lichtdeur1, lichtdeur2, lichtdeur3, lichtdeur4, achterdeur1, achterdeur2, achterdeur3, achterdeur4, poortevent1, ketelsevent, override1,override2, override3, override4
 
-[event1]
+[lichtdeur1]
 event_id = 0xf0
-actors = deur1, steen1_act
-wildcard1 =sluit,5,open
+actors = lichtsnoer1, kamer1licht
+wildcard1 =900,sluit,900,open
 onklaarmaken = hack(steen1_act,wildcard1)
 
-[event2]
-event_id = 0xf1
-actors = deur2, steen2_act
-wildcard2 =sluit,5,open
+[lichtdeur2]
+event_id = 0xf0
+actors = lichtsnoer2, kamer2licht
+wildcard2 =900,sluit,900,open
 onklaarmaken = hack(steen2_act,wildcard2)
+
+[lichtdeur3]
+event_id = 0xf0
+actors = lichtsnoer3, kamer3licht
+wildcard3 =900,sluit,900,open
+onklaarmaken = hack(steen1_act,wildcard3)
+
+[lichtdeur4]
+event_id = 0xf0
+actors = lichtsnoer4, kamer4licht
+wildcard4 =900,sluit,900,open
+onklaarmaken = hack(steen1_act,wildcard4)
+
+[poortevent1]
+event_id = 0xa0
+actors = deur1
+wildcard5 =sluit,900,open
+onklaarmaken = hack(steen1_act,wildcard5)
+
+[achterdeur1]
+event_id = 0xb0
+actors = deur1
+opendeur1 = 5,open
+sluitdeur1 = 5,sluit
+
+[achterdeur2]
+event_id = 0xb1
+actors = deur2
+opendeur2 = 5,open
+sluitdeur2 = 5,sluit
+
+[achterdeur3]
+event_id = 0xb3
+actors = deur3
+opendeur3 = 5,open
+sluitdeur3 = 5,sluit
+
+[achterdeur4]
+event_id = 0xb4
+actors = deur4
+opendeur4 = 5,open
+sluitdeur4 = 5,sluit
+
+[ketelsevent]
+event_id = 0xc0
+actors = ketels
+vuurblauw = sluit,5,open
+vuurrood = sluit
+
+[override1]
+event_id = 0xc1
+actors = lichtsnoer1
+overridedeur1 = sluit,30,open
+
+[override2]
+event_id = 0xc2
+actors = lichtsnoer2
+overridedeur2 = sluit,30,open
+
+[override3]
+event_id = 0xc3
+actors = lichtsnoer3
+overridedeur3 = sluit,30,open
+
+[override4]
+event_id = 0xc4
+actors = lichtsnoer4
+overridedeur4 = sluit,30,open
 
 
 [spelers]
 jip = 13421961
 janneke = 13420919
+device1 = 3200
+device2 = 6400
+device3 = 9600
+device4 = 12800
+device5 = 3300
+device6 = 6600
+device7 = 9900
+device8 = 13200
+gate = 5000
+gerard = 13426395
+remote2 = 4200
+remote3 = 6300
+remote9 = 18900
+remote10 = 21000
+remote11 = 23100
+remote12 = 25200
 
 
 [skills]
 janneke = wildcard2
-jip = wildcard1, onklaarmaken
+jip = wildcard1, onklaarmaken, opendeur1
+gerard = wildcard1, wildcard2, wildcard3, wildcard4, wildcard5
+device1 = opendeur1
+device2 = sluitdeur1
+device3 = opendeur2
+device4 = sluitdeur2
+device5 = opendeur3
+device6 = sluitdeur3
+device7 = opendeur4
+device8 = sluitdeur4
+remote2 = vuurblauw
+remote3 = vuurrood
+remote9 = overridedeur1
+remote10 = overridedeur2
+remote11 = overridedeur3
+remote12 = overridedeur4
+gate = wildcard5
+

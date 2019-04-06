@@ -28,6 +28,13 @@ class Players:
             self.players.append(player)
             self.rfidmap[player.rfid] = player
 
-    def find_player_for_rfid(self, rfid):
-        return self.rfidmap.get(rfid, None)
-
+    def find_player_for_rfid(self, responce):
+        players = [None]
+        for tag in responce:
+            result = self.rfidmap.get(tag, None)
+            if result:
+                if players[0] == None:
+                    players[0] = result
+                else:
+                    players.append(result)
+        return players

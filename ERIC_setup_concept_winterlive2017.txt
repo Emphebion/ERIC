@@ -1,0 +1,72 @@
+Aantekeningen voor Emphebion Dungeon Winterlive 2017
+
+1. Functie
+    
+2. Opbouw
+2.1 Kamers:
+    Portaal:
+        Aansturing met afstandsbediening Open/Dicht
+        TODO/optie: Steen 15 min op groen daarna weer blauw (niet meer relevant)
+        hele kleine optie (wss niet): Met een handsteen 15 min het portaal open dan weer dicht
+        
+    Voorkamer:
+        Vier stenen te bedienen door 4 groepen spelers, mensen met 'onklaar maken' kunnen wisselen: 
+            - knop in linker gang opent: kamer, en zet licht aan
+            - linker knop op stoel opent: kamer
+            - rechter knop op stoel opent: kamer
+            - knop in rechter gang opent: kamer
+            Elke steen opent een kamer door het lichtsnoer uit te zetten en zet daar het licht aan.
+            
+            TODO:
+            Eerste avond maar één steen actief en geen hacken
+            - feedback dat poging door komt maar nu niet lukt: oranje en terug naar vorige kleur
+            - stop met hack: terug naar blauw
+            - na een kwartier: alles rood ipv één steen rood
+    
+        Standaard verlicht met RGB-LED strips
+        
+    Kamer1:
+        Voorstuk:
+            Zodra deur opent (licht snoer uit): 
+                - Licht aan (zacht laag licht)
+                - Deur open geluidje laten afspelen
+            
+            Bevat een trigger voor de achterkamer/kist
+            
+            OPTIE:
+                - aantal dwergen tellen:
+                    - als 1 dwerg: kist 1 open
+                    - als 2 dwerg: kist 2 open
+                    - als 3 dwerg: deur 1 open
+                    - als 4 dwerg: deur 2 open
+                
+        Achterstuk:
+            Zodra de deur opent:
+                - Laat de deur open gaan
+                - Speel 'Stone Rumble'/'Open kist kraak' af
+                - Licht aan
+            
+    Kamer2:
+        Voorstuk:
+        
+        Kist/Achterstuk:
+        
+    Kamer3:
+        Voorstuk:
+        
+        Kist/Achterstuk:
+        
+    Kamer4:
+        Voorstuk:
+        
+        Achterstuk:
+        
+
+3. Overig
+    Als X triggers geplaatst, X ruimtes tegelijk open
+    Future work:
+        - Skill mag pas worden gebruikt op een andere steen als signaal X hoog is geweest
+        - Remote in te stellen delay (afstandsbediening?)
+        - Dynamischer Event handeling
+        - ERIC on startup => send default colors to ALL devices
+        - Have Status check also update BaseLED colours

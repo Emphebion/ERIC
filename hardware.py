@@ -2,6 +2,9 @@ from abc import ABCMeta, abstractmethod
 import time
 import urllib2
 
+import logging
+log = logging.getLogger('ERIC.hardware')
+
 class HardwareInterface:
     __metaclass__ = ABCMeta
 
@@ -39,6 +42,7 @@ class OscarInterface(HardwareInterface):
         indicating whether the operation succeeded.
         """
         try:
+            print command
             response = urllib2.urlopen(self.__url.format(command))
             return bool(response)
         except urllib2.URLError:
@@ -65,6 +69,9 @@ class ArduinoInterface(HardwareInterface):
         self.__send_command(command, data)
         result = self.__wait_for_confirm()
         return result
+    
+    def get_address(self):
+        return self.__address
 
     def __send_command(self, command, data):
         crc = (self.__address ^ ord(command) ^ data[0] ^ data[1] ^ data[2])
@@ -91,7 +98,8 @@ class ArduinoInterface(HardwareInterface):
         endFound = False
         value = 0
         if len(data) != 8:
-            raise ValueError("Incorrect data length {}".format(data))
+            log.error("Incorrect data length {}".format(data))
+            return 0
 
         for i in range(8):
             dataByte = data[i]
