@@ -56,13 +56,13 @@ devices = event1, event2
 event_id = 0xf0
 actors = deur1, steen1_act
 wildcard1 =sluit,5,open
-onklaarmaken = hack(steen1_act,wildcard1)
+onklaarmaken = hack(steen1_act,wildcard1,30)
 
 [event2]
 event_id = 0xf1
 actors = deur2, steen2_act
 wildcard2 =sluit,5,open
-onklaarmaken = hack(steen2_act,wildcard2)
+onklaarmaken = hack(steen2_act,wildcard2,30)
 
 
 [spelers]

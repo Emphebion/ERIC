@@ -1,0 +1,87 @@
+[common]
+port = COM3
+spelers = gerard
+rooms = floor, sfx, spot
+ard_rooms = actors, sensors, events
+ard_port = COM22
+
+
+[actors]
+devices = deur1, deur2, deur3, deur4, steen1_act, steen2_act, steen3_act, steen4_act
+
+[snoer1]
+open = sfx.lightning1
+sluit = deur1.close
+
+[snoer2]
+open = sfx.lightning2
+sluit = deur2.close
+
+[snoer3]
+open = deur3.open
+sluit = deur3.close
+
+[snoer4]
+open = deur4.open
+sluit = deur4.close
+
+
+[sensors]
+devices = steen1, steen2, steen3, steen4, poort
+
+[steen1]
+ardaddr = 0x0b
+events = event1
+
+[steen2]
+ardaddr = 0x0f
+events = event2
+
+[steen3]
+ardaddr = 0x0c
+events = event2
+
+[steen4]
+ardaddr = 0x0d
+events = event2
+
+[poort]
+ardaddr = 0x0e
+events = event2
+
+
+[events]
+devices = event1
+
+[event1]
+event_id = 0xf0
+actors = deur1, steen1_act
+wildcard1 =sluit,5,hack(steen1_act,wildcard1,5),5,open
+onklaarmaken = hack(steen1_act,wildcard1)
+
+[event2]
+event_id = 0xf0
+actors = deur2, steen2_act
+wildcard1 =sluit,5,hack(steen2_act,wildcard1,5),5,open
+onklaarmaken = hack(steen2_act,wildcard1)
+
+[event3]
+event_id = 0xf0
+actors = deur2, steen3_act
+wildcard1 =sluit,5,hack(steen3_act,wildcard1,5),5,open
+onklaarmaken = hack(steen3_act,wildcard1)
+
+[event4]
+event_id = 0xf0
+actors = deur2, steen4_act
+wildcard1 =sluit,5,hack(steen4_act,wildcard1,5),5,open
+onklaarmaken = hack(steen4_act,wildcard1)
+
+
+[spelers]
+gerard = 13421961
+vincent = 13420919
+
+[skills]
+gerard = wildcard1
+vincent = wildcard1

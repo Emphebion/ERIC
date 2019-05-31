@@ -1,5 +1,6 @@
 #from kivy.logger import Logger
 #log = Logger
+import sys, getopt
 import ConfigParser
 config = ConfigParser.ConfigParser()
 
@@ -68,10 +69,28 @@ class ArdUniverse:
 active_events = set()
 serial_pool = SerialPool()
 
-def main():
-    ardUniverse = ArdUniverse('ericconfig.txt')
-    ardUniverse.connect_all()
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv,"hd")
+        if opts:
+            for opt, arg in opts:
+                if opt == '-h':
+                    print 'ERIC: start up options; -d = DEBUG'
+                    sys.exit()
+                elif opt == '-d':
+                    print 'ERIC: Debug mode started'
+                    eric('erictestingconfig.txt')
+        else:
+            print 'ERIC: Dungeon activated'
+            eric('ericconfig.txt')
+                
+    except getopt.GetoptError:
+        print 'ERIC: Something went wrong but Heck, we run it anyway!'
+        eric('ericconfig.txt')
 
+def eric(config_file):
+    ardUniverse = ArdUniverse(config_file)        
+    ardUniverse.connect_all()
     players = Players(config)
 
     while True:
@@ -108,4 +127,4 @@ def handle_event(event, player, sensor):
 
 
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
